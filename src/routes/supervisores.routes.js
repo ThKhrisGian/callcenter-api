@@ -3,10 +3,11 @@ import supervisoresController from "../controllers/supervisoresController.js";
 
 const router = Router();
 
-router.get("/supervisores", supervisoresController.getAllSupervisores);
-router.get("/supervisores/:id", supervisoresController.getSupervisorById);
-router.post("/supervisores", supervisoresController.createSupervisor);
-router.delete("/supervisores/:id", supervisoresController.deleteSupervisorById);
-router.put("/supervisores/:id", supervisoresController.updateSupervisorById);
+router
+  .get("/supervisores", supervisoresController.getAllSupervisores)
+  .get("/supervisores/:id", supervisoresController.getSupervisorById)
+  .post("/supervisores", supervisoresController.createSupervisor)
+  .delete("/supervisores/:id", supervisoresController.deleteSupervisorById)
+  .put("/supervisores/:id", supervisoresController.updateSupervisorById);
 
 export default router;
