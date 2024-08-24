@@ -1,15 +1,9 @@
 import { db } from "../db.js";
+import supervisoresServices from "../services/supervisoresServices.js";
 
-const getAllSupervisores = (req, res) => {
-  db.all("SELECT * FROM supervisor", (err, rows) => {
-    if (err) {
-      console.error(err.message);
-      res.status(500).send("Error al obtener los supervisores.");
-    } else {
-      res.status(201).json(rows);
-      console.log(rows);
-    }
-  });
+const getAllSupervisores = async (req, res) => {
+  const allSupervisores = await supervisoresServices.getAllSupervisores();
+  res.json(allSupervisores);
 };
 
 const getSupervisorById = (req, res) => {
