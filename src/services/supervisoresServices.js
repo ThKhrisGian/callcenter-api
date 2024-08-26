@@ -5,7 +5,7 @@ const getAllSupervisores = async () => {
     const allSupervisores = await new Promise((resolve, reject) => {
       db.all("SELECT * FROM supervisor", (err, rows) => {
         if (err) {
-          return reject(err);
+          reject(err);
         }
         resolve(rows);
       });
