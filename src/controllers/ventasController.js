@@ -1,5 +1,3 @@
-import { db } from "../db.js";
-
 import ventasServices from "../services/ventasServices.js";
 
 const getAllVentas = async (req, res) => {

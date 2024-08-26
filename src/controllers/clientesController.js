@@ -1,6 +1,4 @@
 import clientesServices from "../services/clientesServices.js";
-import { db } from "../db.js";
-import supervisoresServices from "../services/supervisoresServices.js";
 
 const getAllClientes = async (req, res) => {
   try {
@@ -76,34 +74,20 @@ const updateClienteById = async (req, res) => {
   } = req.body;
 
   try {
-    const updatedCliente = await new Promise((resolve, reject) => {
-      db.run(
-        "UPDATE cliente SET nombre = ?, dni = ?, fecha_nacimiento = ?, email = ?, direccion = ?, provincia = ?, distrito = ?, cp = ?, num_fijo = ?, num_moviles = ?, cuentaBancaria = ? WHERE idCliente = ?",
-        [
-          nombre,
-          dni,
-          fecha_nacimiento,
-          email,
-          direccion,
-          provincia,
-          distrito,
-          cp,
-          num_fijo,
-          num_moviles,
-          cuentaBancaria,
-          id,
-        ],
-        function (err) {
-          if (err) {
-            reject(err);
-          } else if (this.changes > 0) {
-            resolve({ message: "Cliente actualizado" });
-          } else {
-            resolve({ message: " Cliente no encontrado" });
-          }
-        }
-      );
-    });
+    const updatedCliente = await clientesServices.updateClienteById(
+      id,
+      nombre,
+      dni,
+      fecha_nacimiento,
+      email,
+      direccion,
+      provincia,
+      distrito,
+      cp,
+      num_fijo,
+      num_moviles,
+      cuentaBancaria
+    );
 
     res.json(updatedCliente);
   } catch (error) {
