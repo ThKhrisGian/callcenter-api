@@ -1,17 +1,10 @@
+import clientesServices from "../services/clientesServices.js";
 import { db } from "../db.js";
+import supervisoresServices from "../services/supervisoresServices.js";
 
 const getAllClientes = async (req, res) => {
   try {
-    const allClientes = await new Promise((resolve, reject) => {
-      db.all("SELECT * FROM cliente", (err, rows) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(rows);
-        }
-      });
-    });
-
+    const allClientes = await clientesServices.getAllClientes();
     res.json(allClientes);
   } catch (error) {
     res.json({ error: error?.message || error });
@@ -22,17 +15,7 @@ const getClienteById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const cliente = await new Promise((resolve, reject) => {
-      db.get("SELECT * FROM cliente WHERE idCliente = ?", [id], (err, row) => {
-        if (err) {
-          reject(err);
-        } else if (row) {
-          resolve(row);
-        } else {
-          resolve({ message: "Cliente no encontrado" });
-        }
-      });
-    });
+    const cliente = await clientesServices.getClienteById(id);
 
     res.json(cliente);
   } catch (error) {
@@ -56,31 +39,19 @@ const createCliente = async (req, res) => {
   } = req.body;
 
   try {
-    const createdCliente = await new Promise((resolve) => {
-      db.run(
-        "INSERT INTO cliente (nombre, dni, fecha_nacimiento, email, direccion, provincia, distrito, cp, num_fijo, num_moviles, cuentaBancaria) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [
-          nombre,
-          dni,
-          fecha_nacimiento,
-          email,
-          direccion,
-          provincia,
-          distrito,
-          cp,
-          num_fijo,
-          num_moviles,
-          cuentaBancaria,
-        ],
-        function (err) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve({ message: "Cliente creado", id: this.lastID });
-          }
-        }
-      );
-    });
+    const createdCliente = await clientesServices.createCliente(
+      nombre,
+      dni,
+      fecha_nacimiento,
+      email,
+      direccion,
+      provincia,
+      distrito,
+      cp,
+      num_fijo,
+      num_moviles,
+      cuentaBancaria
+    );
 
     res.json(createdCliente);
   } catch (error) {
@@ -144,18 +115,7 @@ const deleteClienteById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const deletedCliente = await new Promise((resolve, reject) => {
-      db.run("DELETE FROM cliente WHERE idCliente = ?", [id], function (err) {
-        if (err) {
-          reject(err);
-        } else if (this.changes > 0) {
-          resolve({ message: "Cliente eliminado correctamente." });
-        } else {
-          resolve({ message: "Cliente no encontrado" });
-        }
-      });
-    });
-
+    const deletedCliente = await clientesServices.deleteClienteById(id);
     res.json(deletedCliente);
   } catch (error) {
     res.json({ error: error?.message || error });
