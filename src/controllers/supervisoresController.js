@@ -1,81 +1,70 @@
-import { db } from "../db.js";
 import supervisoresServices from "../services/supervisoresServices.js";
 
 const getAllSupervisores = async (req, res) => {
-  const allSupervisores = await supervisoresServices.getAllSupervisores();
-  res.json(allSupervisores);
+  try {
+    const allSupervisores = await supervisoresServices.getAllSupervisores();
+    res.json(allSupervisores);
+  } catch (error) {
+    res.json({ error: error?.message || error });
+  }
 };
 
-const getSupervisorById = (req, res) => {
+const getSupervisorById = async (req, res) => {
   const { id } = req.params;
-  db.get(
-    "SELECT * FROM supervisor WHERE idSupervisor = ?",
-    [id],
-    (err, row) => {
-      if (err) {
-        console.error(err.message);
-        res.status(500).send("Error al obtener el supervisor.");
-      } else if (row) {
-        res.json(row);
-      } else {
-        res.status(404).send("Supervisor no encontrado.");
-      }
-    }
-  );
+
+  try {
+    const supervisor = await supervisoresServices.getSupervisorById(id);
+    res.json(supervisor);
+  } catch (error) {
+    res.json({ error: error?.message || error });
+  }
 };
 
-const createSupervisor = (req, res) => {
+const createSupervisor = async (req, res) => {
   const { nombre, contrasena } = req.body;
 
   if (!nombre || !contrasena) {
     return res.status(400).send("Nombre y contraseña son requeridos.");
   }
 
-  db.run(
-    "INSERT INTO supervisor (nombre, contrasena) VALUES (?, ?)",
-    [nombre, contrasena],
-    function (err) {
-      if (err) {
-        console.error(err.message);
-        res.status(500).json({ id: this.lastID });
-      } else {
-        res.status(201).json({ id: this.lastID });
-      }
-    }
-  );
+  try {
+    const createdSupervisor = await supervisoresServices.createSupervisor(
+      nombre,
+      contrasena
+    );
+    res.json(createdSupervisor);
+  } catch (error) {
+    res.json({ error: error?.message || error });
+  }
 };
 
-const updateSupervisorById = (req, res) => {
+const updateSupervisorById = async (req, res) => {
   const { id } = req.params;
   const { nombre, contrasena } = req.body;
-  db.run(
-    "UPDATE supervisor SET nombre = ?, contrasena = ? WHERE idSupervisor = ?",
-    [nombre, contrasena, id],
-    function (err) {
-      if (err) {
-        console.error(err.message);
-        res.status(500).send("Error al actualizar el supervisor.");
-      } else if (this.changes > 0) {
-        res.status(200).json({ mensaje: "Supervisor actualizado" });
-      } else {
-        res.status(404).send("Supervisor no encontrado.");
-      }
-    }
-  );
+
+  try {
+    const updatedSupervisor = await supervisoresServices.updateSupervisorById(
+      id,
+      nombre,
+      contrasena
+    );
+    res.json(updatedSupervisor);
+  } catch (error) {
+    res.json({ error: error?.message || error });
+  }
 };
 
-const deleteSupervisorById = (req, res) => {
+const deleteSupervisorById = async (req, res) => {
   const { id } = req.params;
-  db.run("DELETE FROM supervisor WHERE idSupervisor = ?", [id], function (err) {
-    if (err) {
-      console.error(err.message);
-      res.status(500).send("Error al eliminar el supervisor.");
-    } else if (this.changes > 0) {
-      res.status(200).json({ message: "Supervisor eliminado correctamente" });
-    } else {
-      res.status(404).send("Supervisor no encontrado.");
-    }
-  });
+
+  try {
+    const deletedSupervisor = await supervisoresServices.deleteSupervisorById(
+      id
+    );
+    res.json(deletedSupervisor);
+  } catch (error) {
+    res.json({ error: error?.message || error });
+  }
 };
 
 export default {
