@@ -1,3 +1,4 @@
+import { validationResult } from "express-validator";
 import asesoresServices from "../services/asesoresServices.js";
 
 const getAllAsesores = async (req, res) => {
@@ -23,6 +24,13 @@ const getAsesorById = async (req, res) => {
 
 const createAsesor = async (req, res) => {
   const { nombre, contrasena, idSupervisor } = req.body;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res
+      .status(400)
+      .json({ error: errors?.array().map((error) => error.msg) });
+  }
 
   try {
     const createdAsesor = await asesoresServices.createAsesor(

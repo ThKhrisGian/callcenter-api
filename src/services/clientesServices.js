@@ -52,7 +52,7 @@ const createCliente = async (
   cuentaBancaria
 ) => {
   try {
-    const createdCliente = await new Promise((resolve) => {
+    const createdCliente = await new Promise((resolve, reject) => {
       db.run(
         "INSERT INTO cliente (nombre, dni, fecha_nacimiento, email, direccion, provincia, distrito, cp, num_fijo, num_moviles, cuentaBancaria) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [

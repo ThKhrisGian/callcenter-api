@@ -1,3 +1,4 @@
+import { validationResult } from "express-validator";
 import seguimientosServices from "../services/seguimientosServices.js";
 
 const getAllSeguimientos = async (req, res) => {
@@ -23,6 +24,13 @@ const getSeguimientoById = async (req, res) => {
 const createSeguimiento = async (req, res) => {
   const { texto, fecha, idVenta } = req.body;
 
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res
+      .status(400)
+      .json({ error: errors?.array().map((error) => error.msg) });
+  }
+
   try {
     const createdSeguimiento = await seguimientosServices.createSeguimiento(
       texto,
@@ -39,6 +47,13 @@ const createSeguimiento = async (req, res) => {
 const updateSeguimientoById = async (req, res) => {
   const { id } = req.params;
   const { texto, fecha, idVenta } = req.body;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res
+      .status(400)
+      .json({ errors: errors.array().map((err) => err.msg) });
+  }
 
   try {
     const updatedSeguimiento = await seguimientosServices.updateSeguimientoById(

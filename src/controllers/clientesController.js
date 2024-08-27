@@ -1,3 +1,4 @@
+import { validationResult } from "express-validator";
 import clientesServices from "../services/clientesServices.js";
 
 const getAllClientes = async (req, res) => {
@@ -36,6 +37,12 @@ const createCliente = async (req, res) => {
     cuentaBancaria,
   } = req.body;
 
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res
+      .status(400)
+      .json({ error: errors?.array().map((error) => error.msg) });
+  }
   try {
     const createdCliente = await clientesServices.createCliente(
       nombre,
@@ -72,6 +79,13 @@ const updateClienteById = async (req, res) => {
     num_moviles,
     cuentaBancaria,
   } = req.body;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res
+      .status(400)
+      .json({ error: errors?.array().map((error) => error.msg) });
+  }
 
   try {
     const updatedCliente = await clientesServices.updateClienteById(

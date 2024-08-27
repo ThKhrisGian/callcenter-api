@@ -1,3 +1,4 @@
+import { validationResult } from "express-validator";
 import supervisoresServices from "../services/supervisoresServices.js";
 
 const getAllSupervisores = async (req, res) => {
@@ -23,8 +24,10 @@ const getSupervisorById = async (req, res) => {
 const createSupervisor = async (req, res) => {
   const { nombre, contrasena } = req.body;
 
-  if (!nombre || !contrasena) {
-    return res.status(400).send("Nombre y contraseña son requeridos.");
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({error: errors?.array().map((error) => error.msg)});
   }
 
   try {
@@ -41,6 +44,14 @@ const createSupervisor = async (req, res) => {
 const updateSupervisorById = async (req, res) => {
   const { id } = req.params;
   const { nombre, contrasena } = req.body;
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res
+      .status(400)
+      .json({ errors: errors.array().map((err) => err.msg) });
+  }
 
   try {
     const updatedSupervisor = await supervisoresServices.updateSupervisorById(

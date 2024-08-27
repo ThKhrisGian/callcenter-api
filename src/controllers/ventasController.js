@@ -1,3 +1,4 @@
+import { validationResult } from "express-validator";
 import ventasServices from "../services/ventasServices.js";
 
 const getAllVentas = async (req, res) => {
@@ -23,6 +24,13 @@ const getVentaById = async (req, res) => {
 const createVenta = async (req, res) => {
   const { oferta, estado, idAsesor, idCliente } = req.body;
 
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res
+      .status(400)
+      .json({ error: errors?.array().map((error) => error.msg) });
+  }
+
   try {
     const createdVenta = await ventasServices.createVenta(
       oferta,
@@ -40,6 +48,13 @@ const createVenta = async (req, res) => {
 const updateVentaById = async (req, res) => {
   const { id } = req.params;
   const { oferta, estado, idAsesor, idCliente } = req.body;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res
+      .status(400)
+      .json({ error: errors?.array().map((error) => error.msg) });
+  }
 
   try {
     const updatedVenta = await ventasServices.updateVentaById(
