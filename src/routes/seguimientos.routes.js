@@ -6,19 +6,11 @@ import seguimientosController from "../controllers/seguimientosController.js";
 const router = Router();
 
 // Obtener todos los seguimientos
-router.get("/seguimientos", seguimientosController.getAllSeguimientos);
-router.get("/seguimientos/:id", seguimientosController.getSeguimientoById); //
-
-// Crear un nuevo seguimiento
-router.post("/seguimientos", seguimientosController.createSeguimiento);
-
-// Eliminar un seguimiento por id
-router.delete(
-  "/seguimientos/:id",
-  seguimientosController.deleteSeguimientoById
-);
-
-// Actualizar un seguimiento por id
-router.put("/seguimientos/:id", seguimientosController.updateSeguimientoById);
+router
+  .get("/seguimientos", seguimientosController.getAllSeguimientos)
+  .get("/seguimientos/:id", seguimientosController.getSeguimientoById)
+  .post("/seguimientos", seguimientosController.createSeguimiento)
+  .delete("/seguimientos/:id", seguimientosController.deleteSeguimientoById)
+  .put("/seguimientos/:id", seguimientosController.updateSeguimientoById);
 
 export default router;
