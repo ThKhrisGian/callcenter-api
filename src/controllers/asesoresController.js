@@ -1,5 +1,4 @@
 import asesoresServices from "../services/asesoresServices.js";
-import { db } from "../db.js";
 
 const getAllAsesores = async (req, res) => {
   try {

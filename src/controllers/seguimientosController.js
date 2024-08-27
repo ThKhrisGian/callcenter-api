@@ -1,4 +1,3 @@
-import { db } from "../db.js";
 import seguimientosServices from "../services/seguimientosServices.js";
 
 const getAllSeguimientos = async (req, res) => {
